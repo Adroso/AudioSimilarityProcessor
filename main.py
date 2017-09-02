@@ -12,7 +12,7 @@ ms.use('seaborn-muted')
 import librosa
 import librosa.display
 import os
-from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
 
 # filefinding
 from tkinter.filedialog import askopenfilename
@@ -40,9 +40,13 @@ def main():
     loaded_songs_2 = audio_load(training_files_2, 2)
     loaded_songs_3 = audio_load(test_files, 3)
 
-    find_bpm(loaded_songs_1)
-    find_bpm(loaded_songs_2)
-    find_bpm(loaded_songs_3)
+    song_bpms_1 = find_bpm(loaded_songs_1)
+    song_bpms_2 = find_bpm(loaded_songs_2)
+    song_bpms_3 = find_bpm(loaded_songs_3)
+
+    # merging directories for training data
+    training_bpms = song_bpms_1 + song_bpms_2
+
 
 
 def audio_load(song_paths, type):
@@ -62,10 +66,12 @@ def audio_load(song_paths, type):
 
 
 def find_bpm(loaded_audio):
+    song_bpms = []
     for song in loaded_audio:
         tempo, beats = librosa.beat.beat_track(song[1], song[2])
-        print("{} is {} BPM".format(song[0], tempo))
-        song_bpms = [song[0], tempo]
+        print("Song Type {} is {} BPM".format(song[0], tempo))
+        song_bpms.append([song[0], tempo])
+    return song_bpms
 
 
 def directory_loader(directory_path):
@@ -82,7 +88,8 @@ def directory_loader(directory_path):
         files.append(directory_path + filename)
     return files
 
-def audio_classify():
-    gnb = GaussianNB()
+
+def audio_classify(training_data):
+    knn = KNeighborsClassifier()
 
 main()
