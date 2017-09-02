@@ -46,6 +46,7 @@ def main():
 
     # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
+    audio_classify()
 
 
 
@@ -89,7 +90,8 @@ def directory_loader(directory_path):
     return files
 
 
-def audio_classify(training_data):
+def audio_classify():
     knn = KNeighborsClassifier()
+
 
 main()
