@@ -31,10 +31,11 @@ def main():
     #y, sr = audioLoad(filename)
 
     y, sr = audioLoad(AUDIO_PATH_1)
-    findBPM(y, sr)
+    findBPM(y, sr, AUDIO_PATH_1)
 
 
 def audioLoad(audioPath):
+    #TODO Load every audio file from a specified directory and save the outputs
     try:
         print("Loading..... ", audioPath)
         y, sr = librosa.load(audioPath)
@@ -44,8 +45,10 @@ def audioLoad(audioPath):
         print("Failed To Load Audio File")
         print("Closing")
 
-def findBPM(y, sr):
+def findBPM(y, sr, audioPath):
     tempo, beats = librosa.beat.beat_track(y, sr)
-    print(tempo)
+    print("{} is {} BPM".format(audioPath.split('/', 1)[-1], tempo))
 
+def audioClassify():
+    pass
 main()
