@@ -12,6 +12,7 @@ ms.use('seaborn-muted')
 import librosa
 import librosa.display
 import os
+from sklearn.naive_bayes import GaussianNB
 
 # filefinding
 from tkinter.filedialog import askopenfilename
@@ -24,6 +25,7 @@ TRAINING_1 = 'Trainer_MusicType1/'
 TRAINING_2 = 'Trainer_MusicType2/'
 TEST = "TestData/"
 
+
 def main():
     print("Starting Program..")
 
@@ -34,29 +36,36 @@ def main():
     # if want to find audio on system
     # filename = askopenfilename()
     # y, sr = audioLoad(filename)
-    loaded_songs = audio_load(training_files_1)
-    # find_bpm()
+    loaded_songs_1 = audio_load(training_files_1, 1)
+    loaded_songs_2 = audio_load(training_files_2, 2)
+    loaded_songs_3 = audio_load(test_files, 3)
+
+    find_bpm(loaded_songs_1)
+    find_bpm(loaded_songs_2)
+    find_bpm(loaded_songs_3)
 
 
-def audio_load(song_paths):
-    # TODO Load every audio file from a specified directory and save the outputs
+def audio_load(song_paths, type):
+    # TODO Look into creating a class to manage songs for implementation
     loaded_songs = []
     for song in song_paths:
         try:
             y, sr = librosa.load(song)
             print("Audio Path: ", song, " Loaded into Analyzer")
-            loaded_songs.append([song, y, sr])
+            loaded_songs.append([type, y, sr])
 
         except:
             print("Failed To Load Audio File")
             print("Closing")
+
     return loaded_songs
 
 
-def find_bpm(y, sr, audio_paths):
-    for song in audio_paths:
-        tempo, beats = librosa.beat.beat_track(y, sr)
-        print("{} is {} BPM".format(audio_paths.split('/', 1)[-1], tempo))
+def find_bpm(loaded_audio):
+    for song in loaded_audio:
+        tempo, beats = librosa.beat.beat_track(song[1], song[2])
+        print("{} is {} BPM".format(song[0], tempo))
+        song_bpms = [song[0], tempo]
 
 
 def directory_loader(directory_path):
@@ -74,7 +83,6 @@ def directory_loader(directory_path):
     return files
 
 def audio_classify():
-    pass
-
+    gnb = GaussianNB()
 
 main()
