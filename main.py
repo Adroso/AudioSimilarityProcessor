@@ -34,26 +34,29 @@ def main():
     # if want to find audio on system
     # filename = askopenfilename()
     # y, sr = audioLoad(filename)
+    loaded_songs = audio_load(training_files_1)
+    # find_bpm()
 
-    y, sr = audio_load(AUDIO_PATH_1)
-    find_bpm(y, sr, AUDIO_PATH_1)
 
-
-def audio_load(audio_path):
+def audio_load(song_paths):
     # TODO Load every audio file from a specified directory and save the outputs
-    try:
-        print("Loading..... ", audio_path)
-        y, sr = librosa.load(audio_path)
-        print("Audio Path: ", audio_path, " Loaded")
-        return y, sr
-    except:
-        print("Failed To Load Audio File")
-        print("Closing")
+    loaded_songs = []
+    for song in song_paths:
+        try:
+            y, sr = librosa.load(song)
+            print("Audio Path: ", song, " Loaded into Analyzer")
+            loaded_songs.append([song, y, sr])
+
+        except:
+            print("Failed To Load Audio File")
+            print("Closing")
+    return loaded_songs
 
 
-def find_bpm(y, sr, audio_path):
-    tempo, beats = librosa.beat.beat_track(y, sr)
-    print("{} is {} BPM".format(audio_path.split('/', 1)[-1], tempo))
+def find_bpm(y, sr, audio_paths):
+    for song in audio_paths:
+        tempo, beats = librosa.beat.beat_track(y, sr)
+        print("{} is {} BPM".format(audio_paths.split('/', 1)[-1], tempo))
 
 
 def directory_loader(directory_path):
@@ -61,12 +64,13 @@ def directory_loader(directory_path):
     note: the directory passed in must have a trailing ' / '
     """
     files = []
+
+    print("Reading Files From.. " + directory_path)
     directory = os.fsencode(directory_path)
 
     for file in os.listdir(directory):
         filename = str(os.fsdecode(file))
         files.append(directory_path + filename)
-    print(files)
     return files
 
 def audio_classify():
