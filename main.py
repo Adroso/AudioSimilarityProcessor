@@ -8,10 +8,10 @@ Future Implementation: Be able to infer intended emotional response from music t
 
 # Imports
 import matplotlib.style as ms
-
 ms.use('seaborn-muted')
 import librosa
 import librosa.display
+import os
 
 # filefinding
 from tkinter.filedialog import askopenfilename
@@ -20,9 +20,16 @@ AUDIO_PATH_1 = 'Trainer_MusicType1/rock2.mp3'
 AUDIO_PATH_2 = 'Trainer_MusicType2/tech1.mp3'
 AUDIO_PATH_5 = "TestData/coldplay.mp3"
 
+TRAINING_1 = 'Trainer_MusicType1/'
+TRAINING_2 = 'Trainer_MusicType2/'
+TEST = "TestData/"
 
 def main():
     print("Starting Program..")
+
+    training_files_1 = directory_loader(TRAINING_1)
+    training_files_2 = directory_loader(TRAINING_2)
+    test_files = directory_loader(TEST)
 
     # if want to find audio on system
     # filename = askopenfilename()
@@ -48,6 +55,19 @@ def find_bpm(y, sr, audio_path):
     tempo, beats = librosa.beat.beat_track(y, sr)
     print("{} is {} BPM".format(audio_path.split('/', 1)[-1], tempo))
 
+
+def directory_loader(directory_path):
+    """Function that will retrieve all files from a specified directory path
+    note: the directory passed in must have a trailing ' / '
+    """
+    files = []
+    directory = os.fsencode(directory_path)
+
+    for file in os.listdir(directory):
+        filename = str(os.fsdecode(file))
+        files.append(directory_path + filename)
+    print(files)
+    return files
 
 def audio_classify():
     pass
