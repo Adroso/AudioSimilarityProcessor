@@ -7,24 +7,45 @@ Future Implementation: Be able to infer intended emotional response from music t
 """
 
 #Imports
-import numpy
-import matplotlib
-import IPython
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.style as ms
+ms.use('seaborn-muted')
+import IPython.display
 import librosa
+import librosa.display
+
+#filefinding
+from tkinter.filedialog import askopenfilename
 
 
-
-
-AUDIO_PATH_1 = 'Trainer_MusicType2/tech1.mp3'
+AUDIO_PATH_1 = 'Trainer_MusicType1/rock2.mp3'
+AUDIO_PATH_2 = 'Trainer_MusicType2/tech1.mp3'
+AUDIO_PATH_5 ="TestData/coldplay.mp3"
 
 def main():
     print("Starting Program..")
-    audioLoad()
 
-def audioLoad():
+    #if want to find audio on system
+    #filename = askopenfilename()
+    #y, sr = audioLoad(filename)
+
+    y, sr = audioLoad(AUDIO_PATH_1)
+    findBPM(y, sr)
+
+
+def audioLoad(audioPath):
     try:
-        y, sr = librosa.load(AUDIO_PATH_1)
-        print("Audio Path: ", AUDIO_PATH_1, " Loaded")
+        print("Loading..... ", audioPath)
+        y, sr = librosa.load(audioPath)
+        print("Audio Path: ", audioPath, " Loaded")
+        return y, sr
     except:
-        print("Failed To Load")
+        print("Failed To Load Audio File")
+        print("Closing")
+
+def findBPM(y, sr):
+    tempo, beats = librosa.beat.beat_track(y, sr)
+    print(tempo)
+
 main()
