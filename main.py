@@ -13,6 +13,8 @@ import librosa
 import librosa.display
 import os
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn import svm
+import numpy as np
 
 # filefinding
 from tkinter.filedialog import askopenfilename
@@ -46,7 +48,8 @@ def main():
 
     # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
-    audio_classify()
+
+    audio_classify(training_bpms, song_bpms_3)
 
 
 
@@ -90,8 +93,17 @@ def directory_loader(directory_path):
     return files
 
 
-def audio_classify():
-    knn = KNeighborsClassifier()
+def audio_classify(train_up, test):
+    lables = []
+    for item in train_up:
+        lables.append(item[0])
+
+    train = np.array(train_up)
+
+    cfl = svm.SVC(kernel='linear', C=1.0)
+
+    cfl.fit(train, lables)
+    print(cfl.predict(test))
 
 
 main()
