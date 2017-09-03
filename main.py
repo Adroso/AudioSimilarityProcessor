@@ -49,7 +49,13 @@ def main():
     # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
 
-    audio_classify(training_bpms, song_bpms_3)
+    classifications = audio_classify_svc(training_bpms, song_bpms_3)
+
+    i = 0
+    for song in classifications:
+        print(test_files[i], " Is of Music Type: ", song)
+        i += 1
+
 
 
 
@@ -93,17 +99,19 @@ def directory_loader(directory_path):
     return files
 
 
-def audio_classify(train_up, test):
+def audio_classify_svc(train_up, test):
+    # prepare data for model
     lables = []
     for item in train_up:
         lables.append(item[0])
-
     train = np.array(train_up)
 
+    #initialise model
     cfl = svm.SVC(kernel='linear', C=1.0)
-
     cfl.fit(train, lables)
-    print(cfl.predict(test))
+    print("Classified")
+
+    return cfl.predict(test)
 
 
 main()
