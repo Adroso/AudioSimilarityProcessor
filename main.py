@@ -12,12 +12,11 @@ ms.use('seaborn-muted')
 import librosa
 import librosa.display
 import os
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 import numpy as np
 
 # filefinding
-from tkinter.filedialog import askopenfilename
+# from tkinter.filedialog import askopenfilename
 
 AUDIO_PATH_1 = 'Trainer_MusicType1/rock2.mp3'
 AUDIO_PATH_2 = 'Trainer_MusicType2/tech1.mp3'
@@ -29,6 +28,7 @@ TEST = "TestData/"
 
 
 def main():
+    # TODO Classifyer is 1D at the moment, look into the librosa library for more features to pull and classify with.
     print("Starting Program..")
 
     training_files_1 = directory_loader(TRAINING_1)
@@ -60,7 +60,6 @@ def main():
 
 
 def audio_load(song_paths, type):
-    # TODO Look into creating a class to manage songs for implementation
     loaded_songs = []
     for song in song_paths:
         try:
