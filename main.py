@@ -64,7 +64,8 @@ def audio_load(song_paths, type):
     for song in song_paths:
         try:
             y, sr = librosa.load(song)
-            print("Audio Path: ", song, " Loaded into Analyzer")
+            # print("Audio Path: ", song, " Waveform Loaded")
+            print("Audio {:10} Waveform Loaded".format(song))
             loaded_songs.append([type, y, sr])
 
         except:
