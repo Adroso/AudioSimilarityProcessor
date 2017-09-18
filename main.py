@@ -47,34 +47,29 @@ def main():
     song_bpms_2 = find_bpm(loaded_songs_2)
     song_bpms_3 = find_bpm(loaded_songs_3)
 
-    # training_bpms = song_bpms_1 + song_bpms_2
-
     # Calculating Spectrograph for each directory
     song_spectrographs_1 = find_spectrograph(loaded_songs_1)
     song_spectrographs_2 = find_spectrograph(loaded_songs_2)
     song_spectrographs_3 = find_spectrograph(loaded_songs_3)
-
-    #training_spectrographs = song_spectrographs_1 + song_spectrographs_2
 
     # Calaculating MFCC for each directory
     song_mfcc_1 = find_mfcc(loaded_songs_1)
     song_mfcc_2 = find_mfcc(loaded_songs_2)
     song_mfcc_3 = find_mfcc(loaded_songs_3)
 
-    training_mfcc = song_mfcc_1 + song_mfcc_2
-
     # merging
     training_songs_1 = array_merge(song_bpms_1, song_mfcc_1, song_spectrographs_1)
     training_songs_2 = array_merge(song_bpms_2, song_mfcc_2, song_spectrographs_2)
     test_data = array_merge(song_bpms_3, song_mfcc_3, song_spectrographs_3)
 
-    all_training = training_songs_1 + training_songs_2
 
+    all_training = training_songs_1 + training_songs_2
 
 
     # classifications = audio_classify_svc(training_bpms, song_bpms_3)
     classifications = audio_classify_dtc(all_training, test_data)
 
+    # printing final results
     i = 0
     for song in classifications:
         print(test_files[i], " Is of Music Type: ", song)
@@ -159,10 +154,15 @@ def audio_classify_svc(train_up, test):
 
 
 def audio_classify_dtc(train_up, test):
+    # TODO Fix classifier error with accepting an array as a feature.
+
+    print("Attempting Tree Classification")
     lables = []
     for item in train_up:
         lables.append(item[0])
+        print(item)
     train = np.array(train_up)
+    #train = train_up
 
     tree_model = dtc()
     tree_model.fit(train, lables)
@@ -171,6 +171,7 @@ def audio_classify_dtc(train_up, test):
 
 
 def array_merge(song_bpms, song_mfccs, song_spectro):
+    print("Merging Data properties into list")
     song_features = []
 
     for i in range(1, len(song_bpms)):
