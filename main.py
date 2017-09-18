@@ -26,7 +26,6 @@ TEST = "TestData/"
 
 
 def main():
-    # TODO Classifyer is 1D at the moment, look into the librosa library for more features to pull and classify with.
     print("Starting Program..")
 
     training_files_1 = directory_loader(TRAINING_1)
@@ -44,7 +43,8 @@ def main():
     song_bpms_2 = find_bpm(loaded_songs_2)
     song_bpms_3 = find_bpm(loaded_songs_3)
 
-    find_spectrograph(loaded_songs_1)
+    print(find_spectrograph(loaded_songs_1))
+    print(find_mfcc(loaded_songs_1))
 
     # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
@@ -85,6 +85,7 @@ def find_bpm(loaded_audio):
 
 
 def find_spectrograph(loaded_songs):
+    print("Calculating Song Spectrograph's")
     # loadedsongs structure [songtype, songwaveform, samplerate]
     song_spectralmaps = []
     for song in loaded_songs:
@@ -96,15 +97,12 @@ def find_spectrograph(loaded_songs):
 
 
 def find_mfcc(loaded_songs):
+    print("Calculating Song MFCC")
     song_timbres = []
     for song in loaded_songs:
         mfccs = librosa.feature.mfcc(song[1], song[2])
         song_timbres.append([song[0], mfccs])
     return song_timbres
-
-
-
-
 
 
 def directory_loader(directory_path):
