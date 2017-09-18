@@ -35,19 +35,34 @@ def main():
     # if want to find audio on system
     # filename = askopenfilename()
     # y, sr = audioLoad(filename)
+
+    # Loading Each Directory of songs
     loaded_songs_1 = audio_load(training_files_1, 1)
     loaded_songs_2 = audio_load(training_files_2, 2)
     loaded_songs_3 = audio_load(test_files, 3)
 
+    #Calculating each directories songs BPM
     song_bpms_1 = find_bpm(loaded_songs_1)
     song_bpms_2 = find_bpm(loaded_songs_2)
     song_bpms_3 = find_bpm(loaded_songs_3)
 
-    print(find_spectrograph(loaded_songs_1))
-    print(find_mfcc(loaded_songs_1))
-
-    # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
+
+    # Calculating Spectrograph for each directory
+    song_spectrographs_1 = find_spectrograph(loaded_songs_1)
+    song_spectrographs_2 = find_spectrograph(loaded_songs_2)
+    song_spectrographs_3 = find_spectrograph(loaded_songs_3)
+
+    training_spectrographs = song_spectrographs_1 + song_spectrographs_2
+
+    # Calaculating MFCC for each directory
+    song_mfcc_1 = find_mfcc(loaded_songs_1)
+    song_mfcc_2 = find_mfcc(loaded_songs_2)
+    song_mfcc_3 = find_mfcc(loaded_songs_3)
+
+    training_mfcc = song_mfcc_1 + song_mfcc_2
+
+
 
     classifications = audio_classify_svc(training_bpms, song_bpms_3)
 
@@ -55,7 +70,6 @@ def main():
     for song in classifications:
         print(test_files[i], " Is of Music Type: ", song)
         i += 1
-
 
 
 
