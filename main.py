@@ -14,6 +14,7 @@ import librosa.display
 import os
 from sklearn import svm
 import numpy as np
+from  sklearn.tree import DecisionTreeClassifier as dtc
 
 # filefinding
 # from tkinter.filedialog import askopenfilename
@@ -119,5 +120,8 @@ def audio_classify_svc(train_up, test):
 
     return cfl.predict(test)
 
+
+def audio_classify_dtc():
+    pass
 
 main()
