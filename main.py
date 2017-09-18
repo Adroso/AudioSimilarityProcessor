@@ -47,14 +47,14 @@ def main():
     song_bpms_2 = find_bpm(loaded_songs_2)
     song_bpms_3 = find_bpm(loaded_songs_3)
 
-    training_bpms = song_bpms_1 + song_bpms_2
+    # training_bpms = song_bpms_1 + song_bpms_2
 
     # Calculating Spectrograph for each directory
     song_spectrographs_1 = find_spectrograph(loaded_songs_1)
     song_spectrographs_2 = find_spectrograph(loaded_songs_2)
     song_spectrographs_3 = find_spectrograph(loaded_songs_3)
 
-    training_spectrographs = song_spectrographs_1 + song_spectrographs_2
+    #training_spectrographs = song_spectrographs_1 + song_spectrographs_2
 
     # Calaculating MFCC for each directory
     song_mfcc_1 = find_mfcc(loaded_songs_1)
@@ -63,8 +63,17 @@ def main():
 
     training_mfcc = song_mfcc_1 + song_mfcc_2
 
+    # merging
+    training_songs_1 = array_merge(song_bpms_1, song_mfcc_1, song_spectrographs_1)
+    training_songs_2 = array_merge(song_bpms_2, song_mfcc_2, song_spectrographs_2)
+    test_data = array_merge(song_bpms_3, song_mfcc_3, song_spectrographs_3)
+
+    all_training = training_songs_1 + training_songs_2
+
+
+
     # classifications = audio_classify_svc(training_bpms, song_bpms_3)
-    classifications = audio_classify_dtc(training_bpms, song_bpms_3)
+    classifications = audio_classify_dtc(all_training, test_data)
 
     i = 0
     for song in classifications:
@@ -159,5 +168,22 @@ def audio_classify_dtc(train_up, test):
     tree_model.fit(train, lables)
     prediction = tree_model.predict(test)
     return prediction
+
+
+def array_merge(song_bpms, song_mfccs, song_spectro):
+    song_features = []
+
+    for i in range(1, len(song_bpms)):
+        for bpm in song_bpms:
+            ind_bpm = bpm[1]
+        for mfcc in song_mfccs:
+            ind_mfcc = mfcc[1]
+        for spectral in song_spectro:
+            ind_spectro = spectral[1]
+
+        song_features.append([song_bpms[0], ind_bpm, ind_mfcc, ind_spectro])
+
+    return song_features
+
 
 main()
