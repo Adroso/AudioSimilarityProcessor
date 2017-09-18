@@ -85,8 +85,24 @@ def find_bpm(loaded_audio):
 
 
 def find_spectrograph(loaded_songs):
+    # loadedsongs structure [songtype, songwaveform, samplerate]
+    song_spectralmaps = []
     for song in loaded_songs:
-        print(song)
+        D = librosa.stft(song[1])
+        # D_harmonic, D_percussive = librosa.decompose.hpss(D)
+        # rp = np.max(np.abs(D))
+        song_spectralmaps.append([song[0], D])
+    return song_spectralmaps
+
+
+def find_mfcc(loaded_songs):
+    song_timbres = []
+    for song in loaded_songs:
+        mfccs = librosa.feature.mfcc(song[1], song[2])
+        song_timbres.append([song[0], mfccs])
+    return song_timbres
+
+
 
 
 
