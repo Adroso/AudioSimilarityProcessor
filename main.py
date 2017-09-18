@@ -15,6 +15,7 @@ import os
 from sklearn import svm
 import numpy as np
 from  sklearn.tree import DecisionTreeClassifier as dtc
+from sklearn.metrics import accuracy_score
 
 # filefinding
 # from tkinter.filedialog import askopenfilename
@@ -62,9 +63,8 @@ def main():
 
     training_mfcc = song_mfcc_1 + song_mfcc_2
 
-
-
-    classifications = audio_classify_svc(training_bpms, song_bpms_3)
+    # classifications = audio_classify_svc(training_bpms, song_bpms_3)
+    classifications = audio_classify_dtc(training_bpms, song_bpms_3)
 
     i = 0
     for song in classifications:
@@ -149,7 +149,15 @@ def audio_classify_svc(train_up, test):
     return cfl.predict(test)
 
 
-def audio_classify_dtc():
-    pass
+def audio_classify_dtc(train_up, test):
+    lables = []
+    for item in train_up:
+        lables.append(item[0])
+    train = np.array(train_up)
+
+    tree_model = dtc()
+    tree_model.fit(train, lables)
+    prediction = tree_model.predict(test)
+    return prediction
 
 main()
