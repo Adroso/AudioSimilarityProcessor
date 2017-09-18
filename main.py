@@ -18,9 +18,6 @@ import numpy as np
 # filefinding
 # from tkinter.filedialog import askopenfilename
 
-AUDIO_PATH_1 = 'Trainer_MusicType1/rock2.mp3'
-AUDIO_PATH_2 = 'Trainer_MusicType2/tech1.mp3'
-AUDIO_PATH_5 = "TestData/coldplay.mp3"
 
 TRAINING_1 = 'Trainer_MusicType1/'
 TRAINING_2 = 'Trainer_MusicType2/'
@@ -45,6 +42,8 @@ def main():
     song_bpms_1 = find_bpm(loaded_songs_1)
     song_bpms_2 = find_bpm(loaded_songs_2)
     song_bpms_3 = find_bpm(loaded_songs_3)
+
+    find_spectrograph(loaded_songs_1)
 
     # merging directories for training data
     training_bpms = song_bpms_1 + song_bpms_2
@@ -82,6 +81,13 @@ def find_bpm(loaded_audio):
         print("Song Type {} is {} BPM".format(song[0], tempo))
         song_bpms.append([song[0], tempo])
     return song_bpms
+
+
+def find_spectrograph(loaded_songs):
+    for song in loaded_songs:
+        print(song)
+
+
 
 
 def directory_loader(directory_path):

@@ -24,6 +24,7 @@ plt.tight_layout()
 D = librosa.stft(y)
 D_harmonic, D_percussive = librosa.decompose.hpss(D)
 rp = np.max(np.abs(D))
+print(D)
 
 plt.figure(figsize=(12, 8))
 
