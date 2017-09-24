@@ -57,6 +57,11 @@ def main():
     song_mfcc_2 = find_mfcc(loaded_songs_2)
     song_mfcc_3 = find_mfcc(loaded_songs_3)
 
+    # File output
+    f = open('out.txt', 'w')
+    f.write(str(song_mfcc_1))
+    f.close()
+
     # merging
     training_songs_1 = array_merge(song_bpms_1, song_mfcc_1, song_spectrographs_1)
     training_songs_2 = array_merge(song_bpms_2, song_mfcc_2, song_spectrographs_2)
