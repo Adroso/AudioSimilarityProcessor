@@ -17,7 +17,7 @@ import numpy as np
 from  sklearn.tree import DecisionTreeClassifier as dtc
 from sklearn.metrics import accuracy_score
 
-np.set_printoptions(threshold=np.nan)
+# np.set_printoptions(threshold=np.nan)
 import tensorflow as tf
 
 # filefinding
@@ -72,7 +72,9 @@ def audio_load(song_paths, type):
             y, sr = librosa.load(song)
             # print("Audio Path: ", song, " Waveform Loaded")
             print("Audio {:10} Waveform Loaded".format(song))
-            loaded_songs.append([type, y, sr])
+            # loaded_songs.append([type, y, sr])
+            loaded_songs.append([y, sr])
+
 
         except:
             print("Failed To Load Audio File")
@@ -82,8 +84,20 @@ def audio_load(song_paths, type):
 
 
 def feature_extractor(songs):
-    # initial try with 1 song
-    print(songs)
+    print(songs[0][0])
+    wavform = songs[0][0]
+    samprate = songs[0][1]
+    # attempting for 1 song
+    stft = np.array(librosa.stft(wavform))
+    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=samprate).T, axis=0)
+    mfccs = np.mean(librosa.feature.mfcc(y=wavform, sr=samprate).T, axis=0)
+    mel = np.mean(librosa.feature.melspectrogram(wavform, sr=samprate).T, axis=0)
+    contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=samprate).T, axis=0)
+    tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(wavform),
+                                              sr=samprate).T, axis=0)
+
+    return mfccs, chroma, mel, contrast, tonnetz
+
 
 
 def find_bpm(loaded_audio):
