@@ -17,6 +17,8 @@ import numpy as np
 from  sklearn.tree import DecisionTreeClassifier as dtc
 from sklearn.metrics import accuracy_score
 
+np.set_printoptions(threshold=np.nan)
+
 # filefinding
 # from tkinter.filedialog import askopenfilename
 
