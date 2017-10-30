@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans, MiniBatchKMeans
 import librosa
 import librosa.display
-import os
 import numpy as np
 
 # note position 0 in songs array corresponds to position 2 in songtypes
@@ -28,7 +27,6 @@ TESTSONGS = ['Trainer_MusicType3/techLuke.mp3', 'Trainer_MusicType3/technoAdri.m
 
 # TESTSONGS = ['Trainer_MusicType1/rock3.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech4.mp3',
 #              'Trainer_MusicType2/tech2.mp3', 'Trainer_MusicType3/orcestral_type3.mp3']
-
 
 # TESTSONGSTYPES = ['rock', 'techno']
 
