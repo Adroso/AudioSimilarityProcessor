@@ -16,13 +16,18 @@ import os
 import numpy as np
 
 # note position 0 in songs array corresponds to position 2 in songtypes
-SONGS = ['Trainer_MusicType1/rock6.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType2/tech3.mp3',
-         'Trainer_MusicType2/tech5.mp3']
-SONGTYPES = [0, 0, 1, 1]
+SONGS = ['Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType1/rock3.mp3',
+         'Trainer_MusicType1/rock2.mp3', 'Trainer_MusicType2/tech3.mp3',
+         'Trainer_MusicType2/tech5.mp3', 'Trainer_MusicType2/tech1.mp3', 'Trainer_MusicType2/tech4.mp3']
+SONGTYPES = [0, 0, 0, 0, 1, 1, 1, 1]
 # SONGTYPES = ['rock', 'rock', 'techno', 'techno']
 
-TESTSONGS = ['Trainer_MusicType1/rock2.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech4.mp3',
-             'Trainer_MusicType2/tech2.mp3']
+TESTSONGS = ['Trainer_MusicType3/techLuke.mp3', 'Trainer_MusicType3/technoAdri.mp3', 'Trainer_MusicType3/rockLuke2.m4a',
+             'Trainer_MusicType3/unknownLuke.mp3']
+
+
+# TESTSONGS = ['Trainer_MusicType1/rock3.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech4.mp3',
+#              'Trainer_MusicType2/tech2.mp3', 'Trainer_MusicType3/orcestral_type3.mp3']
 
 
 # TESTSONGSTYPES = ['rock', 'techno']
@@ -35,7 +40,7 @@ def main():
     test_waveforms = audio_load(TESTSONGS)
     test_features = extract_features(test_waveforms)
     audio_classifyer(raw_features, SONGTYPES, test_features)
-    mini_batch(raw_features, SONGTYPES, test_features)
+    # mini_batch(raw_features, SONGTYPES, test_features)
 
 
 def audio_load(song_paths):
@@ -70,6 +75,10 @@ def extract_features(raw_sounds):
         bpm, beats = librosa.beat.beat_track(i[0], i[1])
 
         audioFeatures.append([mfccs, bpm])
+
+        mel = np.mean(librosa.feature.melspectrogram(i[0], sr=i[1]).T, axis=0)
+        print(np.average(mel))
+
 
     return audioFeatures
 
