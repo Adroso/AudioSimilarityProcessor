@@ -9,7 +9,7 @@ Future Implementation: Be able to infer intended emotional response from music t
 import matplotlib.style as ms
 from matplotlib.pyplot import specgram
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 import librosa
 import librosa.display
 import os
@@ -19,9 +19,9 @@ import numpy as np
 SONGS = ['Trainer_MusicType1/rock6.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType2/tech3.mp3',
          'Trainer_MusicType2/tech5.mp3']
 SONGTYPES = [0, 0, 1, 1]
-SONGTYPES = ['rock', 'rock', 'techno', 'techno']
+# SONGTYPES = ['rock', 'rock', 'techno', 'techno']
 
-TESTSONGS = ['Trainer_MusicType1/rock3.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech1.mp3',
+TESTSONGS = ['Trainer_MusicType1/rock2.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech4.mp3',
              'Trainer_MusicType2/tech2.mp3']
 
 
@@ -35,6 +35,7 @@ def main():
     test_waveforms = audio_load(TESTSONGS)
     test_features = extract_features(test_waveforms)
     audio_classifyer(raw_features, SONGTYPES, test_features)
+    mini_batch(raw_features, SONGTYPES, test_features)
 
 
 def audio_load(song_paths):
@@ -87,12 +88,29 @@ def audio_classifyer(features, lables, testingFeatures):
 
     results = kmeans.predict(testing_data)
 
+    print("KMEANS")
     song = 0
     for i in results:
         print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], i))
         song += 1
 
 
+def mini_batch(features, lables, testingFeatures):
+    classifyer_data = np.asanyarray(features)
+    classifyer_lables = np.asanyarray(lables)
+    testing_data = np.asanyarray(testingFeatures)
+
+    miniK = MiniBatchKMeans(n_clusters=2, batch_size=50,
+                            n_init=2, max_no_improvement=10, verbose=0).fit(classifyer_data)
+    # kmeans.labels_ = classifyer_lables
+
+    results = miniK.predict(testing_data)
+
+    print("MINI BTACH KMEANS")
+    song = 0
+    for i in results:
+        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], i))
+        song += 1
 
 
 
