@@ -18,16 +18,21 @@ import numpy as np
 
 def main():
     # note position 0 in songs array corresponds to position 2 in songtypes
-    SONGS = ['Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType2/tech3.mp3',
+    SONGS = ['Trainer_MusicType1/rock6.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType2/tech3.mp3',
              'Trainer_MusicType2/tech5.mp3']
+    SONGTYPES = [0, 0, 1, 1]
     SONGTYPES = ['rock', 'rock', 'techno', 'techno']
 
-    TESTSONGS = []
-    TESTSONGSTYPES = []
+    TESTSONGS = ['Trainer_MusicType1/rock3.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech1.mp3',
+                 'Trainer_MusicType2/tech2.mp3']
+    # TESTSONGSTYPES = ['rock', 'techno']
 
     raw_waveforms = audio_load(SONGS)
     raw_features = extract_features(raw_waveforms)
-    audio_classifyer(raw_features, SONGTYPES)
+
+    test_waveforms = audio_load(TESTSONGS)
+    test_features = extract_features(test_waveforms)
+    audio_classifyer(raw_features, SONGTYPES, test_features)
 
 
 def audio_load(song_paths):
@@ -66,10 +71,20 @@ def extract_features(raw_sounds):
     return audioFeatures
 
 
-def audio_classifyer(features, lables):
+def audio_classifyer(features, lables, testingFeatures):
     classifyer_data = np.asanyarray(features)
+    classifyer_lables = np.asanyarray(lables)
+    testing_data = np.asanyarray(testingFeatures)
 
-    kmeans = KMeans(n_clusters=2, random_state=0).fit(classifyer_data)
+    print(classifyer_data)
+    print(classifyer_lables)
+    print(testing_data)
+
+    kmeans = KMeans(n_clusters=2, random_state=1).fit(classifyer_data)
+    # kmeans.labels_ = classifyer_lables
+
+    results = kmeans.predict(testing_data)
+    print(results)
 
 
 
