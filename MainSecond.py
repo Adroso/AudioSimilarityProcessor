@@ -43,8 +43,9 @@ def main():
     raw_features = extract_features(raw_waveforms)
     test_features = extract_features(test_waveforms)
 
-    audio_classifyer(raw_features, SONGTYPES, test_features)
+    kmeans_cluster(raw_features, SONGTYPES, test_features)
     decision_tree_classifyer(raw_features, SONGTYPES, test_features)
+    knn_classifyer(raw_features, SONGTYPES, test_features)
     # mini_batch(raw_features, SONGTYPES, test_features)
 
 
@@ -109,18 +110,12 @@ def extract_features(raw_sounds):
     return audioFeatures
 
 
-def audio_classifyer(features, lables, testingFeatures):
-    print("\nKMEANS CLUSTERING")
+def kmeans_cluster(features, lables, testingFeatures):
+    print("\n\nKMEANS CLUSTERING")
     classifyer_data = np.asanyarray(features)
-    classifyer_lables = np.asanyarray(lables)
     testing_data = np.asanyarray(testingFeatures)
 
-    # print(classifyer_data)
-    # print(classifyer_lables)
-    #print(testing_data)
-
     kmeans = KMeans(n_clusters=2, random_state=1).fit(classifyer_data)
-    # kmeans.labels_ = classifyer_lables
 
     results = kmeans.predict(testing_data)
 
@@ -150,32 +145,41 @@ def decision_tree_classifyer(features, lables, testingFeatures):
         song += 1
 
 
-def knn_classifyer():
-    pass
-
-def mini_batch(features, lables, testingFeatures):
+def knn_classifyer(features, lables, testingFeatures):
+    print("\n\nKNN CLASSIFYER")
     classifyer_data = np.asanyarray(features)
     classifyer_lables = np.asanyarray(lables)
     testing_data = np.asanyarray(testingFeatures)
 
-    miniK = MiniBatchKMeans(n_clusters=2, batch_size=50,
-                            n_init=2, max_no_improvement=10, verbose=0).fit(classifyer_data)
-    # kmeans.labels_ = classifyer_lables
+    knn_clf = neighbors.KNeighborsClassifier().fit(classifyer_data, classifyer_lables)
+    results = knn_clf.predict(testing_data)
 
-    results = miniK.predict(testing_data)
-
-    print("MINI BTACH KMEANS")
-    song = 0
-    for i in results:
-        if i == 1:
-            txtLab = "Techno/Electronic"
-        else:
-            txtLab = "Rock"
-
-        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], SONGLABLES[i]))
-        song += 1
-
-
-
+    print(results)
 
 main()
+
+
+
+
+# Decomissioned
+# def mini_batch(features, lables, testingFeatures):
+#     classifyer_data = np.asanyarray(features)
+#     classifyer_lables = np.asanyarray(lables)
+#     testing_data = np.asanyarray(testingFeatures)
+#
+#     miniK = MiniBatchKMeans(n_clusters=2, batch_size=50,
+#                             n_init=2, max_no_improvement=10, verbose=0).fit(classifyer_data)
+#     # kmeans.labels_ = classifyer_lables
+#
+#     results = miniK.predict(testing_data)
+#
+#     print("MINI BTACH KMEANS")
+#     song = 0
+#     for i in results:
+#         if i == 1:
+#             txtLab = "Techno/Electronic"
+#         else:
+#             txtLab = "Rock"
+#
+#         print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], SONGLABLES[i]))
+#         song += 1
