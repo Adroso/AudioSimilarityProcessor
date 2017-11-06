@@ -33,10 +33,10 @@ TESTSONGS = ['Trainer_MusicType3/techLuke.mp3', 'Trainer_MusicType3/technoAdri.m
 def main():
 
     raw_waveforms = audio_load(SONGS)
-    raw_features = extract_features(raw_waveforms)
-
     test_waveforms = audio_load(TESTSONGS)
+    raw_features = extract_features(raw_waveforms)
     test_features = extract_features(test_waveforms)
+
     audio_classifyer(raw_features, SONGTYPES, test_features)
     # mini_batch(raw_features, SONGTYPES, test_features)
 
@@ -63,19 +63,43 @@ def extract_features(raw_sounds):
     audioFeatures = []
 
     for i in raw_sounds:
-        # print(i[0], i[1])
-        print("Processing Audio Features")
-        raw_mfccs = np.mean(librosa.feature.mfcc(y=i[0], sr=i[1]).T, axis=0)
-        # averaging whole array
+        print("Processing Audio Features {}".format(i))
+        wavform = i[0]
+        samrate = i[1]
+
+        # MFCC  Mel-frequency cepstral coefficients
+        raw_mfccs = np.mean(librosa.feature.mfcc(y=wavform, sr=samrate).T, axis=0)
         mfccs = np.average(raw_mfccs)
 
-        # calculating bpm
-        bpm, beats = librosa.beat.beat_track(i[0], i[1])
+        # BPM
+        bpm, beats = librosa.beat.beat_track(wavform, samrate)
 
-        audioFeatures.append([mfccs, bpm])
+        # STFT (fourer Transform)
+        stft = np.array(librosa.stft(wavform))
 
-        mel = np.mean(librosa.feature.melspectrogram(i[0], sr=i[1]).T, axis=0)
-        print(np.average(mel))
+        # CHROMA     Compute a chromagram from a waveform or power spectrogram.
+        raw_chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=samrate).T, axis=0)
+        chroma = np.average(raw_chroma)
+        print("chroma  ", chroma)
+
+        # MEL   Compute a mel-scaled spectrogram.
+        raw_mel = np.mean(librosa.feature.melspectrogram(wavform, sr=samrate).T, axis=0)
+        mel = np.average(raw_mel)
+        print("mel  ", mel)
+
+        # CONTRAST   Compute spectral contrast
+        raw_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=samrate).T, axis=0)
+        contrast = np.average(raw_contrast)
+        print("Contrast  ", contrast)
+
+        # TONNETZ   Computes the tonal centroid features
+        raw_tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(wavform),
+                                                      sr=samrate).T, axis=0)
+        tonnetz = np.average(raw_tonnetz)
+
+        print("tonnetz  ", tonnetz)
+
+        audioFeatures.append([mfccs, bpm, chroma, mel, contrast, tonnetz])
 
 
     return audioFeatures
@@ -86,9 +110,9 @@ def audio_classifyer(features, lables, testingFeatures):
     classifyer_lables = np.asanyarray(lables)
     testing_data = np.asanyarray(testingFeatures)
 
-    print(classifyer_data)
-    print(classifyer_lables)
-    print(testing_data)
+    # print(classifyer_data)
+    # print(classifyer_lables)
+    #print(testing_data)
 
     kmeans = KMeans(n_clusters=2, random_state=1).fit(classifyer_data)
     # kmeans.labels_ = classifyer_lables
@@ -116,7 +140,12 @@ def mini_batch(features, lables, testingFeatures):
     print("MINI BTACH KMEANS")
     song = 0
     for i in results:
-        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], i))
+        if i == 1:
+            txtLab = "Techno/Electronic"
+        else:
+            txtLab = "Rock"
+
+        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], txtLab))
         song += 1
 
 
