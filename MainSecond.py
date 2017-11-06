@@ -138,7 +138,17 @@ def decision_tree_classifyer(features, lables, testingFeatures):
     testing_data = np.asanyarray(testingFeatures)
 
     dt_clf = tree.DecisionTreeClassifier().fit(classifyer_data, classifyer_lables)
-    dt_clf.predict(testing_data)
+    results = dt_clf.predict(testing_data)
+
+    song = 0
+    for i in results:
+        if i == 1:
+            txtLab = "Techno/Electronic"
+        else:
+            txtLab = "Rock"
+
+        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], txtLab))
+        song += 1
 
 
 
