@@ -161,8 +161,6 @@ def audio_classify_svc(train_up, test):
 
 
 def audio_classify_dtc(train_up, test):
-    # TODO Fix classifier error with accepting an array as a feature.
-
     print("Attempting Tree Classification")
     lables = []
     for item in train_up:

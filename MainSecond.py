@@ -4,6 +4,13 @@ Program Created by Adrian Lapico ("Adroso") 25/9/17
 Purpose: CP3000 Audio Processing Research Project - Second Attempt Starting From Scratch
 Scope: Be able to classify samples of music into genre to make recommendations
 Future Implementation: Be able to infer intended emotional response from music
+
+Dependencies:
+(Anaconda Package Manager)
+sklearn
+numpy
+librosa
+graphviz (for decsion tree visualisation)
 """
 
 
@@ -12,6 +19,8 @@ from sklearn import tree
 import librosa
 import librosa.display
 import numpy as np
+import graphviz
+
 
 # note position 0 in songs array corresponds to position 2 in songtypes
 SONGS = ['Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType1/rock3.mp3',
@@ -139,6 +148,10 @@ def decision_tree_classifyer(features, lables, testingFeatures):
 
     dt_clf = tree.DecisionTreeClassifier().fit(classifyer_data, classifyer_lables)
     results = dt_clf.predict(testing_data)
+
+    dec_tree_data = tree.export_graphviz(dt_clf, out_file=None)
+    graph = graphviz.Source(dec_tree_data)
+    graph.render("iris")
 
     song = 0
     for i in results:
