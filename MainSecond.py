@@ -13,8 +13,7 @@ librosa
 graphviz (for decsion tree visualisation)
 """
 
-
-from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.cluster import KMeans
 from sklearn import tree
 from sklearn import neighbors
 import numpy as np
@@ -154,32 +153,9 @@ def knn_classifyer(features, lables, testingFeatures):
     knn_clf = neighbors.KNeighborsClassifier().fit(classifyer_data, classifyer_lables)
     results = knn_clf.predict(testing_data)
 
-    print(results)
+    song = 0
+    for i in results:
+        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], SONGLABLES[i]))
+        song += 1
 
 main()
-
-
-
-
-# Decomissioned
-# def mini_batch(features, lables, testingFeatures):
-#     classifyer_data = np.asanyarray(features)
-#     classifyer_lables = np.asanyarray(lables)
-#     testing_data = np.asanyarray(testingFeatures)
-#
-#     miniK = MiniBatchKMeans(n_clusters=2, batch_size=50,
-#                             n_init=2, max_no_improvement=10, verbose=0).fit(classifyer_data)
-#     # kmeans.labels_ = classifyer_lables
-#
-#     results = miniK.predict(testing_data)
-#
-#     print("MINI BTACH KMEANS")
-#     song = 0
-#     for i in results:
-#         if i == 1:
-#             txtLab = "Techno/Electronic"
-#         else:
-#             txtLab = "Rock"
-#
-#         print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], SONGLABLES[i]))
-#         song += 1
