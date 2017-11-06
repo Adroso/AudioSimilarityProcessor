@@ -16,9 +16,11 @@ graphviz (for decsion tree visualisation)
 
 from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn import tree
+from sklearn import neighbors
 import numpy as np
 import librosa
 import librosa.display
+
 
 # note position 0 in songs array corresponds to position 2 in songtypes
 SONGS = ['Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType1/rock4.mp3', 'Trainer_MusicType1/rock3.mp3',
@@ -139,7 +141,7 @@ def decision_tree_classifyer(features, lables, testingFeatures):
     results = dt_clf.predict(testing_data)
 
     # dec_tree_data = tree.export_graphviz(dt_clf, out_file=None)
-    # graph = graphviz.Source(dec_tree_data)
+    # graph = graphviz.Source(results)
     # graph.render("iris")
 
     song = 0
@@ -148,9 +150,8 @@ def decision_tree_classifyer(features, lables, testingFeatures):
         song += 1
 
 
-
-
-
+def knn_classifyer():
+    pass
 
 def mini_batch(features, lables, testingFeatures):
     classifyer_data = np.asanyarray(features)
