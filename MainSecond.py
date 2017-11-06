@@ -22,7 +22,9 @@ SONGTYPES = [0, 0, 0, 0, 1, 1, 1, 1]
 # SONGTYPES = ['rock', 'rock', 'techno', 'techno']
 
 TESTSONGS = ['Trainer_MusicType3/techLuke.mp3', 'Trainer_MusicType3/technoAdri.mp3', 'Trainer_MusicType3/rockLuke2.m4a',
-             'Trainer_MusicType3/unknownLuke.mp3']
+             'Trainer_MusicType3/unknownLuke.mp3', 'Trainer_MusicType3/unknownLuke.mp3',
+             'Trainer_MusicType3/orcestral_type3.mp3', 'Trainer_MusicType3/technoJap.mp3',
+             'Trainer_MusicType3/The Chainsmokers - Dont Let Me Down (Illenium Remix).mp3']
 
 
 # TESTSONGS = ['Trainer_MusicType1/rock3.mp3', 'Trainer_MusicType1/rock5.mp3', 'Trainer_MusicType2/tech4.mp3',
@@ -122,7 +124,12 @@ def audio_classifyer(features, lables, testingFeatures):
     print("KMEANS")
     song = 0
     for i in results:
-        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], i))
+        if i == 1:
+            txtLab = "Techno/Electronic"
+        else:
+            txtLab = "Rock"
+
+        print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], txtLab))
         song += 1
 
 
