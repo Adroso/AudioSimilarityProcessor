@@ -2,14 +2,13 @@
 Program Created by Adrian Lapico ("Adroso") 25/9/17
 
 Purpose: CP3000 Audio Processing Research Project - Second Attempt Starting From Scratch
-Scope: Be able to classify samples of music into genre
-Future Implementation: Be able to infer intended emotional response from music to make recommendations
+Scope: Be able to classify samples of music into genre to make recommendations
+Future Implementation: Be able to infer intended emotional response from music
 """
 
-import matplotlib.style as ms
-from matplotlib.pyplot import specgram
-import matplotlib.pyplot as plt
+
 from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn import tree
 import librosa
 import librosa.display
 import numpy as np
@@ -40,6 +39,7 @@ def main():
     test_features = extract_features(test_waveforms)
 
     audio_classifyer(raw_features, SONGTYPES, test_features)
+    decision_tree_classifyer(raw_features, SONGTYPES, test_features)
     # mini_batch(raw_features, SONGTYPES, test_features)
 
 
@@ -82,24 +82,21 @@ def extract_features(raw_sounds):
         # CHROMA     Compute a chromagram from a waveform or power spectrogram.
         raw_chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=samrate).T, axis=0)
         chroma = np.average(raw_chroma)
-        print("chroma  ", chroma)
 
         # MEL   Compute a mel-scaled spectrogram.
         raw_mel = np.mean(librosa.feature.melspectrogram(wavform, sr=samrate).T, axis=0)
         mel = np.average(raw_mel)
-        print("mel  ", mel)
 
         # CONTRAST   Compute spectral contrast
         raw_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=samrate).T, axis=0)
         contrast = np.average(raw_contrast)
-        print("Contrast  ", contrast)
 
         # TONNETZ   Computes the tonal centroid features
         raw_tonnetz = np.mean(librosa.feature.tonnetz(y=librosa.effects.harmonic(wavform),
                                                       sr=samrate).T, axis=0)
         tonnetz = np.average(raw_tonnetz)
 
-        print("tonnetz  ", tonnetz)
+        print("chroma  ", chroma, "  | mel  ", mel, " | Contrast  ", contrast, " | tonnetz  ", tonnetz)
 
         audioFeatures.append([mfccs, bpm, chroma, mel, contrast, tonnetz])
 
@@ -108,6 +105,7 @@ def extract_features(raw_sounds):
 
 
 def audio_classifyer(features, lables, testingFeatures):
+    print("KMEANS CLUSTERING")
     classifyer_data = np.asanyarray(features)
     classifyer_lables = np.asanyarray(lables)
     testing_data = np.asanyarray(testingFeatures)
@@ -131,6 +129,20 @@ def audio_classifyer(features, lables, testingFeatures):
 
         print("{} song has been clustered into song: type {}.".format(TESTSONGS[song], txtLab))
         song += 1
+
+
+def decision_tree_classifyer(features, lables, testingFeatures):
+    print("DECISION TREE CLASSIFYER")
+    classifyer_data = np.asanyarray(features)
+    classifyer_lables = np.asanyarray(lables)
+    testing_data = np.asanyarray(testingFeatures)
+
+    dt_clf = tree.DecisionTreeClassifier().fit(classifyer_data, classifyer_lables)
+    dt_clf.predict(testing_data)
+
+
+
+
 
 
 def mini_batch(features, lables, testingFeatures):
